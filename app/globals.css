@@ -1,26 +1,54 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: #f7f8fa;
+  --color-card: #ffffff;
+  --color-border: #e2e5ea;
+  --color-primary: #0071a9;
+  --color-primary-dark: #005580;
+  --color-primary-light: #e8f4fa;
+  --color-accent: #00a67e;
+  --color-accent-light: #e6f7f2;
+  --color-accent-dark: #008060;
+  --color-danger: #d94052;
+  --color-danger-light: #fdeaed;
+  --color-text: #1a1f2b;
+  --color-text-sec: #5a6270;
+  --color-text-tert: #8b929e;
+
+  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-playfair);
+
+  --radius-card: 10px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
+
+@layer utilities {
+  .bg-header-gradient {
+    background: linear-gradient(135deg, #004d73 0%, #0071a9 50%, #0088cc 100%);
+  }
+  .shadow-card {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+  .shadow-btn-primary {
+    box-shadow: 0 4px 14px rgba(0, 113, 169, 0.3);
+  }
+  .shadow-btn-primary-hover {
+    box-shadow: 0 6px 20px rgba(0, 113, 169, 0.4);
+  }
+  .shadow-btn-accent {
+    box-shadow: 0 4px 14px rgba(0, 166, 126, 0.3);
+  }
+  .logo-white {
+    filter: brightness(0) invert(1);
+  }
 }
