@@ -8,8 +8,8 @@ export function Header() {
         <Image
           src="/qna_logo.svg"
           alt="QNA Medical"
-          width={140}
-          height={44}
+          width={236}
+          height={77}
           priority
           className="logo-white h-11 w-auto"
         />

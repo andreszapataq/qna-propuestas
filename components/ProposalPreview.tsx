@@ -41,7 +41,7 @@ export function ProposalPreview({ data, onBack }: Props) {
 
       <div className="min-h-[400px] rounded-lg border border-border bg-white p-10 text-[13px] leading-6 shadow-[inset_0_2px_8px_rgba(0,0,0,0.04)]">
         <div className="mb-6 border-b-2 border-primary pb-4 text-center">
-          <Image src="/qna_logo.svg" alt="QNA Medical" width={180} height={58} className="mx-auto h-[50px] w-auto" />
+          <Image src="/qna_logo.svg" alt="QNA Medical" width={236} height={77} className="mx-auto h-[50px] w-auto" />
         </div>
 
         <p className="text-text-sec mb-4 text-[12px]">{todayStr()}</p>
