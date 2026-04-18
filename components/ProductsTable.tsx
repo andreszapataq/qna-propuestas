@@ -16,7 +16,7 @@ export function ProductsTable({ data, onChange, onBack, onNext }: Props) {
   const products = getProducts(data.type);
 
   return (
-    <section className="bg-card shadow-card mb-5 rounded-[10px] border border-border p-6">
+    <section className="mb-5 rounded-card border border-border bg-card p-6 shadow-card">
       <h2 className="font-display mb-4 border-b-2 border-primary-light pb-2.5 text-[18px] font-semibold text-primary-dark">
         Productos y descuento
       </h2>
@@ -89,10 +89,10 @@ export function ProductsTable({ data, onChange, onBack, onNext }: Props) {
                       className={idx % 2 === 1 ? "bg-[#f9fafb]" : ""}
                     >
                       <td className="border-b border-border px-3 py-2">{item.name}</td>
-                      <td className="border-b border-border px-3 py-2 text-right font-[tabular-nums] whitespace-nowrap">
+                      <td className="whitespace-nowrap border-b border-border px-3 py-2 text-right tabular-nums">
                         {fmt(item.price)}
                       </td>
-                      <td className="border-b border-border px-3 py-2 text-right font-semibold text-accent font-[tabular-nums] whitespace-nowrap">
+                      <td className="whitespace-nowrap border-b border-border px-3 py-2 text-right font-semibold tabular-nums text-accent">
                         {fmt(dp)}
                       </td>
                     </tr>
@@ -115,7 +115,7 @@ export function ProductsTable({ data, onChange, onBack, onNext }: Props) {
         <button
           type="button"
           onClick={onNext}
-          className="shadow-btn-primary hover:shadow-btn-primary-hover inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-primary to-primary-dark px-7 py-3 text-[14px] font-semibold text-white transition-transform hover:-translate-y-px"
+          className="inline-flex items-center gap-2 rounded-lg bg-linear-to-br from-primary to-primary-dark px-7 py-3 text-[14px] font-semibold text-white shadow-btn-primary transition-transform hover:-translate-y-px hover:shadow-btn-primary-hover"
         >
           Vista previa →
         </button>
