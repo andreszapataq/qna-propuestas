@@ -46,24 +46,55 @@ export function BatchMode() {
     }
     setBusy(true);
     setProgress(0);
-    const { buildPDF, proposalFileName } = await import("@/lib/pdf-generator");
-    for (let i = 0; i < rows.length; i++) {
-      const d = rows[i];
-      const doc = await buildPDF(d);
-      const fn = proposalFileName(d);
-      doc.save(fn);
-      setProgress(Math.round(((i + 1) / rows.length) * 100));
+    try {
+      const [{ buildPDF, proposalFileName }, { default: JSZip }] = await Promise.all([
+        import("@/lib/pdf-generator"),
+        import("jszip"),
+      ]);
+      const zip = new JSZip();
+      const usedNames = new Map<string, number>();
+      for (let i = 0; i < rows.length; i++) {
+        const d = rows[i];
+        const doc = await buildPDF(d);
+        const baseName = proposalFileName(d);
+        const count = usedNames.get(baseName) ?? 0;
+        usedNames.set(baseName, count + 1);
+        const fn =
+          count === 0
+            ? baseName
+            : baseName.replace(/(\.pdf)?$/i, `-${count + 1}.pdf`);
+        zip.file(fn, doc.output("blob"));
+        setProgress(Math.round(((i + 1) / rows.length) * 100));
+        setStatus({
+          kind: "info",
+          msg: `Generando ${fn} (${i + 1} de ${rows.length})`,
+        });
+        await new Promise((r) => setTimeout(r, 0));
+      }
+      setStatus({ kind: "info", msg: "Comprimiendo archivo ZIP…" });
+      const blob = await zip.generateAsync({ type: "blob" });
+      const stamp = new Date().toISOString().slice(0, 10);
+      const zipName = `propuestas-qna-${stamp}.zip`;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = zipName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
       setStatus({
-        kind: "info",
-        msg: `Generando ${fn} (${i + 1} de ${rows.length})`,
+        kind: "success",
+        msg: `${rows.length} propuestas generadas y descargadas en ${zipName}`,
       });
-      await new Promise((r) => setTimeout(r, 300));
+    } catch (err) {
+      setStatus({
+        kind: "error",
+        msg: err instanceof Error ? err.message : "No se pudieron generar las propuestas",
+      });
+    } finally {
+      setBusy(false);
     }
-    setStatus({
-      kind: "success",
-      msg: `${rows.length} propuestas generadas exitosamente`,
-    });
-    setBusy(false);
   };
 
   return (
@@ -73,7 +104,7 @@ export function BatchMode() {
           Generación en bloque
         </h2>
         <p className="text-text-sec mb-4 text-[13px]">
-          Descarga la plantilla Excel, llénala con los datos de cada propuesta, y súbela aquí para generar todos los PDFs de una vez.
+          Descarga la plantilla Excel, llénala con los datos de cada propuesta, y súbela aquí para generar todos los PDFs en un único archivo ZIP.
         </p>
 
         <div className="mb-5 flex flex-wrap gap-3">
@@ -197,7 +228,7 @@ export function BatchMode() {
               <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path d="M12 5v14M5 12l7 7 7-7" />
               </svg>
-              {busy ? "Generando…" : "Generar todos los PDFs"}
+              {busy ? "Generando…" : "Generar ZIP con todas las propuestas"}
             </button>
           </div>
         </section>
