@@ -56,7 +56,16 @@ export function AppShell() {
               onNext={() => setStep(3)}
             />
           )}
-          {step === 3 && <ProposalPreview data={data} onBack={() => setStep(2)} />}
+          {step === 3 && (
+            <ProposalPreview
+              data={data}
+              onBack={() => setStep(2)}
+              onRestart={() => {
+                setData(INITIAL_DATA);
+                setStep(1);
+              }}
+            />
+          )}
         </div>
       ) : (
         <BatchMode />

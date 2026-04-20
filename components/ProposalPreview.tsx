@@ -9,6 +9,7 @@ import { discountedPrice, fmt, ptLabel, todayStr } from "@/lib/format";
 type Props = {
   data: ProposalData;
   onBack: () => void;
+  onRestart: () => void;
 };
 
 type Status =
@@ -17,7 +18,7 @@ type Status =
   | { kind: "success"; file: string }
   | { kind: "error"; msg: string };
 
-export function ProposalPreview({ data, onBack }: Props) {
+export function ProposalPreview({ data, onBack, onRestart }: Props) {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const products = getProducts(data.type);
   const paymentTerms = ptLabel(data.paymentTermsKey);
@@ -152,11 +153,24 @@ export function ProposalPreview({ data, onBack }: Props) {
       </div>
 
       {status.kind === "success" && (
-        <div className="mt-4 flex items-center gap-2 rounded-lg bg-accent-light px-5 py-3 text-[13px] text-[#006b4f]">
-          <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path d="M20 6L9 17l-5-5" />
-          </svg>
-          PDF generado: <strong>{status.file}</strong>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-accent-light px-5 py-3 text-[13px] text-[#006b4f]">
+          <div className="flex items-center gap-2">
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            PDF generado: <strong>{status.file}</strong>
+          </div>
+          <button
+            type="button"
+            onClick={onRestart}
+            className="inline-flex items-center gap-2 rounded-lg border-[1.5px] border-accent bg-white px-5 py-2 text-[13px] font-semibold text-accent-dark transition-colors hover:bg-accent-light"
+          >
+            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            Crear nueva propuesta
+          </button>
         </div>
       )}
       {status.kind === "error" && (

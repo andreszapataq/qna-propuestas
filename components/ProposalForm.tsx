@@ -22,6 +22,13 @@ export function ProposalForm({ data, onChange, ccEmails, onCcChange, onNext }: P
   const removeCc = (i: number) =>
     onCcChange(ccEmails.filter((_, idx) => idx !== i));
 
+  const isValid =
+    !!data.institution.trim() &&
+    !!data.contactName.trim() &&
+    !!data.contactRole.trim() &&
+    !!data.contactEmail.trim() &&
+    !!data.city.trim();
+
   return (
     <section className="bg-card shadow-card mb-5 rounded-[10px] border border-border p-6">
       <h2 className="font-display mb-4 border-b-2 border-primary-light pb-2.5 text-[18px] font-semibold text-primary-dark">
@@ -135,7 +142,8 @@ export function ProposalForm({ data, onChange, ccEmails, onCcChange, onNext }: P
         <button
           type="button"
           onClick={onNext}
-          className="shadow-btn-primary hover:shadow-btn-primary-hover inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-primary to-primary-dark px-7 py-3 text-[14px] font-semibold text-white transition-transform hover:-translate-y-px"
+          disabled={!isValid}
+          className="shadow-btn-primary hover:shadow-btn-primary-hover inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-primary to-primary-dark px-7 py-3 text-[14px] font-semibold text-white transition-transform hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:hover:translate-y-0"
         >
           Siguiente →
         </button>
