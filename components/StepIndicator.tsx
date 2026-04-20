@@ -30,7 +30,7 @@ export function StepIndicator({ step }: Props) {
         return (
           <div key={s.n} className={`${base} ${rounded} ${stateClass}`}>
             <span
-              className={`mr-1.5 inline-flex h-[22px] w-[22px] items-center justify-center rounded-full text-[11px] font-bold ${chipClass}`}
+              className={`mr-1.5 inline-flex h-5.5 w-5.5 items-center justify-center rounded-full text-[11px] font-bold ${chipClass}`}
             >
               {s.n}
             </span>

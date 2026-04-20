@@ -30,7 +30,7 @@ export function ProposalForm({ data, onChange, ccEmails, onCcChange, onNext }: P
     !!data.city.trim();
 
   return (
-    <section className="bg-card shadow-card mb-5 rounded-[10px] border border-border p-6">
+    <section className="bg-card shadow-card mb-5 rounded-card border border-border p-6">
       <h2 className="font-display mb-4 border-b-2 border-primary-light pb-2.5 text-[18px] font-semibold text-primary-dark">
         Datos del cliente
       </h2>
@@ -39,7 +39,7 @@ export function ProposalForm({ data, onChange, ccEmails, onCcChange, onNext }: P
         <div className="flex flex-col gap-1.5">
           <label className={labelBase}>Tipo de cliente</label>
           <select
-            className={`${inputBase} cursor-pointer appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2212%22%20height=%228%22%3E%3Cpath%20d=%22M1%201l5%205%205-5%22%20stroke=%22%235a6270%22%20fill=%22none%22%20stroke-width=%221.5%22/%3E%3C/svg%3E')] bg-[position:right_14px_center] bg-no-repeat pr-10`}
+            className={`${inputBase} cursor-pointer appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2212%22%20height=%228%22%3E%3Cpath%20d=%22M1%201l5%205%205-5%22%20stroke=%22%235a6270%22%20fill=%22none%22%20stroke-width=%221.5%22/%3E%3C/svg%3E')] bg-position-[right_14px_center] bg-no-repeat pr-10`}
             value={data.type}
             onChange={(e) => onChange({ type: e.target.value as ClientType })}
           >
@@ -119,7 +119,7 @@ export function ProposalForm({ data, onChange, ccEmails, onCcChange, onNext }: P
                   <button
                     type="button"
                     aria-label="Eliminar correo"
-                    className="flex h-[38px] w-[34px] items-center justify-center rounded-md bg-danger-light text-[16px] text-danger"
+                    className="flex h-9.5 w-8.5 items-center justify-center rounded-md bg-danger-light text-[16px] text-danger"
                     onClick={() => removeCc(i)}
                   >
                     ×
@@ -143,7 +143,7 @@ export function ProposalForm({ data, onChange, ccEmails, onCcChange, onNext }: P
           type="button"
           onClick={onNext}
           disabled={!isValid}
-          className="shadow-btn-primary hover:shadow-btn-primary-hover inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-primary to-primary-dark px-7 py-3 text-[14px] font-semibold text-white transition-transform hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:hover:translate-y-0"
+          className="shadow-btn-primary hover:shadow-btn-primary-hover inline-flex items-center gap-2 rounded-lg bg-linear-to-br from-primary to-primary-dark px-7 py-3 text-[14px] font-semibold text-white transition-transform hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:hover:translate-y-0"
         >
           Siguiente →
         </button>

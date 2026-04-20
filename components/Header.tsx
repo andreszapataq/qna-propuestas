@@ -3,7 +3,7 @@ import Image from "next/image";
 export function Header() {
   return (
     <header className="bg-header-gradient relative overflow-hidden px-8 py-5 shadow-[0_4px_20px_rgba(0,113,169,0.25)]">
-      <div className="pointer-events-none absolute -right-10 -top-10 h-[200px] w-[200px] rounded-full bg-white/[0.06]" />
+      <div className="pointer-events-none absolute -right-10 -top-10 h-50 w-50 rounded-full bg-white/6" />
       <div className="relative flex items-center gap-4">
         <Image
           src="/qna_logo.svg"
