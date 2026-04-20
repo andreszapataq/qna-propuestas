@@ -34,12 +34,12 @@ export function ProposalPreview({ data, onBack }: Props) {
   };
 
   return (
-    <section className="bg-card shadow-card mb-5 rounded-[10px] border border-border p-6">
+    <section className="bg-card shadow-card mb-5 rounded-card border border-border p-6">
       <h2 className="font-display mb-4 border-b-2 border-primary-light pb-2.5 text-[18px] font-semibold text-primary-dark">
         Vista previa de la propuesta
       </h2>
 
-      <div className="min-h-[400px] rounded-lg border border-border bg-white p-10 text-[13px] leading-6 shadow-[inset_0_2px_8px_rgba(0,0,0,0.04)]">
+      <div className="shadow-card-inner min-h-100 rounded-lg border border-border bg-white p-10 text-[13px] leading-6">
         <div className="mb-6 border-b-2 border-primary pb-4 text-center">
           <Image src="/qna_logo.svg" alt="QNA Medical" width={236} height={77} className="mx-auto h-[50px] w-auto" />
         </div>
@@ -81,7 +81,7 @@ export function ProposalPreview({ data, onBack }: Props) {
           <strong className="text-primary-dark">QNA MEDICAL</strong>
         </div>
 
-        <hr className="my-6 border-none border-t-2 border-primary" />
+        <hr className="my-6 border-0 border-t-2 border-primary" />
 
         <p className="mb-2 text-[12px] font-semibold text-primary-dark">
           Tabla de precios de Aloinjertos para {data.institution || "[Institución]"}, por {paymentTerms}.
@@ -142,7 +142,7 @@ export function ProposalPreview({ data, onBack }: Props) {
           type="button"
           onClick={handleDownload}
           disabled={status.kind === "loading"}
-          className="shadow-btn-primary hover:shadow-btn-primary-hover inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-primary to-primary-dark px-7 py-3 text-[14px] font-semibold text-white transition-transform hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+          className="shadow-btn-primary hover:shadow-btn-primary-hover inline-flex items-center gap-2 rounded-lg bg-linear-to-br from-primary to-primary-dark px-7 py-3 text-[14px] font-semibold text-white transition-transform hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
         >
           <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path d="M12 5v14M5 12l7 7 7-7" />
