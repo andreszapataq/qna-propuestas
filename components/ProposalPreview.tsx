@@ -4,7 +4,7 @@ import { Fragment, useState } from "react";
 import Image from "next/image";
 import type { ProposalData } from "@/lib/types";
 import { getProducts } from "@/lib/prices";
-import { discountedPrice, fmt, ptLabel, todayStr } from "@/lib/format";
+import { discountedPrice, ptLabel, todayStr } from "@/lib/format";
 
 type Props = {
   data: ProposalData;
@@ -84,39 +84,44 @@ export function ProposalPreview({ data, onBack, onRestart }: Props) {
 
         <hr className="my-6 border-0 border-t-2 border-primary" />
 
-        <p className="mb-2 text-[12px] font-semibold text-primary-dark">
-          Tabla de precios de Aloinjertos para {data.institution || "[Institución]"}, por {paymentTerms}.
+        <p className="mb-2 text-[12px] text-primary-dark">
+          Tabla de precios de Aloinjertos para{" "}
+          <strong>{data.institution || "[Institución]"}</strong>, por {paymentTerms}.
         </p>
 
         <table className="my-4 w-full border-collapse text-[12px]">
           <thead>
             <tr>
               <th className="bg-primary px-2 py-2 text-left text-[11px] text-white">Descripción</th>
-              <th className="bg-primary px-2 py-2 text-right text-[11px] text-white">Precio</th>
-              <th className="bg-primary px-2 py-2 text-right text-[11px] text-white">{data.discount}% DSCT</th>
+              <th className="bg-primary px-2 py-2 text-center text-[11px] text-white">Precio</th>
+              <th className="bg-primary px-2 py-2 text-center text-[11px] text-white">{data.discount}% DSCT</th>
             </tr>
           </thead>
           <tbody>
-            {products.map((cat) => (
+            {products.map((cat, catIdx) => (
               <Fragment key={cat.cat}>
-                <tr className="bg-primary-light font-semibold">
-                  <td colSpan={3} className="px-2 py-1.5 text-[11px] text-primary-dark">
-                    {cat.cat}
-                  </td>
-                </tr>
-                {cat.items.map((item, idx) => {
+                {cat.items.map((item, itemIdx) => {
                   const dp = discountedPrice(item.price, data.discount);
+                  const isLastOfCategory = itemIdx === cat.items.length - 1;
+                  const hasNextCategory = catIdx < products.length - 1;
+                  const borderClass =
+                    isLastOfCategory && hasNextCategory
+                      ? "border-b-[1.5px] border-[#b4c8d7]"
+                      : "border-b border-[#ebeef2]";
                   return (
-                    <tr
-                      key={`${cat.cat}-${item.name}`}
-                      className={idx % 2 === 1 ? "bg-[#f9fafb]" : ""}
-                    >
-                      <td className="border-b border-[#eee] px-2 py-1.5 text-[11.5px]">{item.name}</td>
-                      <td className="border-b border-[#eee] px-2 py-1.5 text-right text-[11.5px]">
-                        {fmt(item.price)}
+                    <tr key={`${cat.cat}-${item.name}`} className="bg-white">
+                      <td className={`px-2 py-1 text-[11.5px] ${borderClass}`}>{item.name}</td>
+                      <td className={`px-2 py-1 text-[11.5px] ${borderClass}`}>
+                        <span className="flex justify-between gap-2">
+                          <span>$</span>
+                          <span>{item.price.toLocaleString("es-CO")}</span>
+                        </span>
                       </td>
-                      <td className="border-b border-[#eee] px-2 py-1.5 text-right text-[11.5px] font-semibold text-accent">
-                        {fmt(dp)}
+                      <td className={`px-2 py-1 text-[11.5px] font-semibold text-accent ${borderClass}`}>
+                        <span className="flex justify-between gap-2">
+                          <span>$</span>
+                          <span>{dp.toLocaleString("es-CO")}</span>
+                        </span>
                       </td>
                     </tr>
                   );

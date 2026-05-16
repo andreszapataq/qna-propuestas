@@ -1,8 +1,8 @@
 import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+import autoTable, { type CellHookData } from "jspdf-autotable";
 import type { ProposalData } from "./types";
 import { getProducts } from "./prices";
-import { cleanFileName, discountedPrice, fmt, ptLabel, todayStr } from "./format";
+import { cleanFileName, discountedPrice, ptLabel, todayStr } from "./format";
 
 let cachedLogoPng: string | null = null;
 let cachedSignaturePng: string | null = null;
@@ -55,17 +55,139 @@ async function getLogoPng(): Promise<string | null> {
   }
 }
 
-const BODY_PARAGRAPHS = [
-  "Cordial saludo,",
-  "",
-  "Agradecemos la oportunidad que nos brinda. Reconociendo la amplia trayectoria y experiencia de su prestigiosa institución, ponemos a su consideración nuestra propuesta técnica y económica de Aloinjertos Gold Standard, reconocidos por su alto desempeño en el mercado global.",
-  "",
-  "Los Aloinjertos suministrados por QNA Medical cuentan con procesos de esterilización de última generación y un contenido de hasta 100% de material biológico. Entre estas técnicas se destaca el método PASCO2, el cual utiliza dióxido de carbono supercrítico para eliminar de manera efectiva los microorganismos patógenos presentes en el material, garantizando la eliminación de cualquier tipo de contaminación microbiana. Este proceso asegura un alto potencial biológico, así como mayor seguridad para los pacientes y el personal médico.",
-  "",
-  "Nuestra misión es comercializar y distribuir productos de la más alta calidad, incluidos sistemas de Trauma, Fijación Externa, Reemplazos Articulares y Medicina Deportiva, orientados al tratamiento de afecciones degenerativas, traumáticas y deformidades, con aplicaciones en las áreas ortopédica, neurológica, odontológica y maxilofacial.",
-  "",
-  "Quedamos atentos a cualquier información adicional que requieran y a la posibilidad de establecer una relación comercial sólida y duradera.",
+type Segment = { text: string; bold: boolean };
+
+const BODY_PARAGRAPHS: Segment[][] = [
+  [{ text: "Cordial saludo,", bold: false }],
+  [],
+  [
+    {
+      text: "Agradecemos la oportunidad que nos brinda. Reconociendo la amplia trayectoria y experiencia de su prestigiosa institución, ponemos a su consideración nuestra propuesta técnica y económica de ",
+      bold: false,
+    },
+    { text: "Aloinjertos Gold Standard", bold: true },
+    { text: ", reconocidos por su alto desempeño en el mercado global.", bold: false },
+  ],
+  [],
+  [
+    {
+      text: "Los Aloinjertos suministrados por QNA Medical cuentan con procesos de esterilización de última generación y un contenido de hasta 100% de material biológico. Entre estas técnicas se destaca el método PASCO2, el cual utiliza dióxido de carbono supercrítico para eliminar de manera efectiva los microorganismos patógenos presentes en el material, garantizando la eliminación de cualquier tipo de contaminación microbiana. Este proceso asegura un alto potencial biológico, así como mayor seguridad para los pacientes y el personal médico.",
+      bold: false,
+    },
+  ],
+  [],
+  [
+    {
+      text: "Nuestra misión es comercializar y distribuir productos de la más alta calidad, incluidos sistemas de ",
+      bold: false,
+    },
+    {
+      text: "Trauma, Fijación Externa, Reemplazos Articulares y Medicina Deportiva",
+      bold: true,
+    },
+    {
+      text: ", orientados al tratamiento de afecciones degenerativas, traumáticas y deformidades, con aplicaciones en las áreas ortopédica, neurológica, odontológica y maxilofacial.",
+      bold: false,
+    },
+  ],
+  [],
+  [
+    {
+      text: "Quedamos atentos a cualquier información adicional que requieran y a la posibilidad de establecer una relación comercial sólida y duradera.",
+      bold: false,
+    },
+  ],
 ];
+
+type WordChunk = { text: string; bold: boolean };
+type ParaWord = { chunks: WordChunk[]; width: number };
+
+function tokenizeSegments(segments: Segment[], doc: jsPDF): ParaWord[] {
+  const words: ParaWord[] = [];
+  let current: WordChunk[] = [];
+
+  const flush = () => {
+    if (current.length === 0) return;
+    let width = 0;
+    for (const c of current) {
+      doc.setFont("helvetica", c.bold ? "bold" : "normal");
+      width += doc.getTextWidth(c.text);
+    }
+    words.push({ chunks: current, width });
+    current = [];
+  };
+
+  for (const seg of segments) {
+    const parts = seg.text.split(/( +)/);
+    for (const part of parts) {
+      if (part === "") continue;
+      if (/^ +$/.test(part)) {
+        flush();
+      } else if (current.length > 0 && current[current.length - 1].bold === seg.bold) {
+        current[current.length - 1].text += part;
+      } else {
+        current.push({ text: part, bold: seg.bold });
+      }
+    }
+  }
+  flush();
+  return words;
+}
+
+function renderJustifiedParagraph(
+  doc: jsPDF,
+  segments: Segment[],
+  x: number,
+  startY: number,
+  maxWidth: number,
+  lineH: number,
+): number {
+  if (segments.length === 0) return startY;
+  const words = tokenizeSegments(segments, doc);
+  if (words.length === 0) return startY;
+
+  doc.setFont("helvetica", "normal");
+  const spaceWidth = doc.getTextWidth(" ");
+
+  type Line = { words: ParaWord[]; naturalWidth: number };
+  const lines: Line[] = [];
+  let buf: ParaWord[] = [];
+  let bufW = 0;
+  for (const word of words) {
+    const trial = buf.length === 0 ? word.width : bufW + spaceWidth + word.width;
+    if (trial > maxWidth && buf.length > 0) {
+      lines.push({ words: buf, naturalWidth: bufW });
+      buf = [word];
+      bufW = word.width;
+    } else {
+      buf.push(word);
+      bufW = trial;
+    }
+  }
+  if (buf.length > 0) lines.push({ words: buf, naturalWidth: bufW });
+
+  let y = startY;
+  lines.forEach((line, i) => {
+    const isLast = i === lines.length - 1;
+    let gap = spaceWidth;
+    if (!isLast && line.words.length > 1) {
+      const totalWordWidth = line.words.reduce((s, w) => s + w.width, 0);
+      gap = (maxWidth - totalWordWidth) / (line.words.length - 1);
+    }
+    let cx = x;
+    line.words.forEach((word, wi) => {
+      for (const chunk of word.chunks) {
+        doc.setFont("helvetica", chunk.bold ? "bold" : "normal");
+        doc.text(chunk.text, cx, y);
+        cx += doc.getTextWidth(chunk.text);
+      }
+      if (wi < line.words.length - 1) cx += gap;
+    });
+    y += lineH;
+  });
+  doc.setFont("helvetica", "normal");
+  return y;
+}
 
 export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   const products = getProducts(data.type);
@@ -130,15 +252,11 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   doc.setFontSize(10);
 
   BODY_PARAGRAPHS.forEach((p) => {
-    if (!p) {
+    if (p.length === 0) {
       y += 4;
       return;
     }
-    const lines = doc.splitTextToSize(p, cW) as string[];
-    lines.forEach((l) => {
-      doc.text(l, mL, y);
-      y += 5;
-    });
+    y = renderJustifiedParagraph(doc, p, mL, y, cW, 5);
     y += 2;
   });
 
@@ -168,11 +286,12 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   doc.setFontSize(10);
   doc.setTextColor(50);
   doc.setFont("helvetica", "normal");
-  const intro = `Tabla de precios de Aloinjertos para ${data.institution || ""}, por ${paymentTerms}.`;
-  (doc.splitTextToSize(intro, cW) as string[]).forEach((l) => {
-    doc.text(l, mL, y);
-    y += 5;
-  });
+  const introSegments: Segment[] = [
+    { text: "Tabla de precios de Aloinjertos para ", bold: false },
+    { text: data.institution || "", bold: true },
+    { text: `, por ${paymentTerms}.`, bold: false },
+  ];
+  y = renderJustifiedParagraph(doc, introSegments, mL, y, cW, 5);
   y += 4;
 
   doc.setFontSize(13);
@@ -181,52 +300,73 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   doc.text("BIOLÓGICOS", pageW / 2, y, { align: "center" });
   y += 8;
 
-  type AutoTableBody = Array<
-    | Array<string | { content: string; colSpan?: number; styles?: Record<string, unknown> }>
-  >;
-  const body: AutoTableBody = [];
-  products.forEach((cat) => {
-    body.push([
-      {
-        content: cat.cat,
-        colSpan: 3,
-        styles: {
-          fillColor: [232, 244, 250],
-          textColor: [0, 85, 128],
-          fontStyle: "bold",
-          fontSize: 8,
-        },
-      },
-    ]);
+  const body: string[][] = [];
+  const rowCategoryIdx: number[] = [];
+  products.forEach((cat, catIdx) => {
     cat.items.forEach((item) => {
       const dp = discountedPrice(item.price, data.discount);
-      body.push([item.name, fmt(item.price), fmt(dp)]);
+      body.push([item.name, item.price.toLocaleString("es-CO"), dp.toLocaleString("es-CO")]);
+      rowCategoryIdx.push(catIdx);
     });
   });
+
+  const DISCOUNT_GREEN: [number, number, number] = [0, 166, 126];
+  const PRICE_TEXT: [number, number, number] = [40, 40, 40];
+  const ROW_LINE: [number, number, number] = [235, 238, 242];
+  const CAT_LINE: [number, number, number] = [180, 200, 215];
 
   autoTable(doc, {
     startY: y,
     head: [["DESCRIPCIÓN", "PRECIO", `${data.discount}% DSCT`]],
     body,
+    theme: "plain",
     margin: { left: mL, right: mR },
     styles: {
       font: "helvetica",
       fontSize: 8.5,
-      cellPadding: 3,
-      textColor: [40, 40, 40],
+      cellPadding: { top: 2, right: 3, bottom: 2, left: 3 },
+      textColor: PRICE_TEXT,
+      lineColor: ROW_LINE,
+      lineWidth: { top: 0, right: 0, bottom: 0.2, left: 0 },
+      fillColor: [255, 255, 255],
     },
     headStyles: {
       fillColor: [0, 113, 169],
       textColor: [255, 255, 255],
       fontStyle: "bold",
       fontSize: 8,
+      halign: "center",
+      lineWidth: 0,
     },
     columnStyles: {
       0: { cellWidth: "auto" },
       1: { halign: "right", cellWidth: 35 },
-      2: { halign: "right", cellWidth: 35, fontStyle: "bold", textColor: [0, 166, 126] },
+      2: { halign: "right", cellWidth: 35, fontStyle: "bold", textColor: DISCOUNT_GREEN },
     },
-    alternateRowStyles: { fillColor: [249, 250, 251] },
+    didParseCell: (hd: CellHookData) => {
+      if (hd.section !== "body") return;
+      const rowIdx = hd.row.index;
+      const catIdx = rowCategoryIdx[rowIdx];
+      const nextCatIdx =
+        rowIdx < rowCategoryIdx.length - 1 ? rowCategoryIdx[rowIdx + 1] : catIdx;
+      if (catIdx !== nextCatIdx) {
+        hd.cell.styles.lineColor = CAT_LINE;
+        hd.cell.styles.lineWidth = { top: 0, right: 0, bottom: 0.4, left: 0 };
+      }
+    },
+    didDrawCell: (hd: CellHookData) => {
+      if (hd.section !== "body") return;
+      if (hd.column.index !== 1 && hd.column.index !== 2) return;
+      const isDiscount = hd.column.index === 2;
+      doc.setFont("helvetica", isDiscount ? "bold" : "normal");
+      doc.setFontSize(8.5);
+      const [r, g, b] = isDiscount ? DISCOUNT_GREEN : PRICE_TEXT;
+      doc.setTextColor(r, g, b);
+      const x = hd.cell.x + hd.cell.padding("left");
+      const yMid = hd.cell.y + hd.cell.height / 2;
+      doc.text("$", x, yMid, { baseline: "middle" });
+      doc.setTextColor(40, 40, 40);
+    },
   });
 
   const lastTable = (doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable;
