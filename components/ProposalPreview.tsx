@@ -110,7 +110,7 @@ export function ProposalPreview({ data, onBack, onRestart }: Props) {
                       : "border-b border-[#ebeef2]";
                   return (
                     <tr key={`${cat.cat}-${item.name}`} className="bg-white">
-                      <td className={`px-2 py-1 text-[11.5px] ${borderClass}`}>{item.name}</td>
+                      <td className={`pr-2 py-1 text-[11.5px] ${borderClass}`}>{item.name}</td>
                       <td className={`px-2 py-1 text-[11.5px] ${borderClass}`}>
                         <span className="flex justify-between gap-2">
                           <span>$</span>

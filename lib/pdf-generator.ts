@@ -345,6 +345,9 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
     },
     didParseCell: (hd: CellHookData) => {
       if (hd.section !== "body") return;
+      if (hd.column.index === 0) {
+        hd.cell.styles.cellPadding = { top: 2, right: 3, bottom: 2, left: 0 };
+      }
       const rowIdx = hd.row.index;
       const catIdx = rowCategoryIdx[rowIdx];
       const nextCatIdx =
