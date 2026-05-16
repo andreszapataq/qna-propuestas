@@ -5,6 +5,26 @@ import { getProducts } from "./prices";
 import { cleanFileName, discountedPrice, fmt, ptLabel, todayStr } from "./format";
 
 let cachedLogoPng: string | null = null;
+let cachedSignaturePng: string | null = null;
+
+async function getSignaturePng(): Promise<string | null> {
+  if (cachedSignaturePng) return cachedSignaturePng;
+  if (typeof window === "undefined") return null;
+  try {
+    const res = await fetch("/victor_signature.png");
+    const blob = await res.blob();
+    const dataUrl = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error("signature load failed"));
+      reader.readAsDataURL(blob);
+    });
+    cachedSignaturePng = dataUrl;
+    return cachedSignaturePng;
+  } catch {
+    return null;
+  }
+}
 
 async function getLogoPng(): Promise<string | null> {
   if (cachedLogoPng) return cachedLogoPng;
@@ -124,7 +144,19 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
 
   y += 8;
   doc.text("Atentamente,", mL, y);
-  y += 12;
+
+  const sigW = 36;
+  const sigH = (sigW * 227) / 637;
+  const signature = await getSignaturePng();
+  if (signature) {
+    try {
+      doc.addImage(signature, "PNG", mL, y + 3, sigW, sigH);
+    } catch {
+      // silent fallback — continue without signature
+    }
+  }
+  y += sigH + 8;
+
   doc.setFont("helvetica", "bold");
   doc.setTextColor(0, 85, 128);
   doc.text("QNA MEDICAL", mL, y);
@@ -146,7 +178,7 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   doc.setFontSize(13);
   doc.setTextColor(0, 85, 128);
   doc.setFont("helvetica", "bold");
-  doc.text("ALOINJERTOS", pageW / 2, y, { align: "center" });
+  doc.text("BIOLÓGICOS", pageW / 2, y, { align: "center" });
   y += 8;
 
   type AutoTableBody = Array<
