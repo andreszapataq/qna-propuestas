@@ -11,7 +11,7 @@ const HEADERS = [
 ] as const;
 
 const EXAMPLES: Array<string | number>[] = [
-  ["Clínica La Estancia", "Luis Guillermo Gutierrez", "Jefe de Compras", "Popayan - Cauca", "ips", 5, "30"],
+  ["Clínica La Estancia", "Luis Guillermo Gutierrez", "Jefe de Compras", "Popayan - Cauca", "ips", 10, "30"],
   ["Medical Neuro", "Jenny Rosero", "Gerente", "Ipiales - Nariño", "distribuidor", 15, "30"],
   [
     "Hospital Universitario San José de Popayan",
@@ -19,7 +19,7 @@ const EXAMPLES: Array<string | number>[] = [
     "Jefe de Compras",
     "Popayan - Cauca",
     "ips",
-    5,
+    10,
     "60",
   ],
 ];
@@ -81,7 +81,7 @@ function rowToProposal(values: (string | number | undefined)[]): ProposalData | 
     contactRole: vals[2] || "",
     city: vals[3] || "",
     type: normalizeType(vals[4] || ""),
-    discount: Math.max(0, Math.min(50, parseFloat(vals[5] || "5") || 5)),
+    discount: Math.max(0, Math.min(50, parseFloat(vals[5] || "10") || 10)),
     paymentTermsKey: normalizePaymentKey(vals[6] || "30"),
     contactEmail: "",
     ccEmails: [],

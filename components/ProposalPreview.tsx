@@ -66,13 +66,21 @@ export function ProposalPreview({ data, onBack, onRestart }: Props) {
         <div className="text-text-sec space-y-2 text-[12.5px]">
           <p>Cordial saludo,</p>
           <p>
-            Agradecemos la oportunidad que nos brinda. Reconociendo la amplia trayectoria y experiencia de su prestigiosa institución, ponemos a su consideración nuestra propuesta técnica y económica de{" "}
-            <strong>Aloinjertos Gold Standard</strong>.
+            Agradecemos la oportunidad que nos brinda. Reconociendo la amplia trayectoria y experiencia de su prestigiosa institución, ponemos a su consideración nuestra propuesta técnica y económica de Biológicos Gold Standard, reconocidos por su alto desempeño en el mercado global, contamos con{" "}
+            <strong>Putty</strong>, <strong>Chips</strong>, <strong>Bloque Tricortical</strong>,{" "}
+            <strong>Cabeza Femoral</strong>, <strong>Lajas</strong>, <strong>Tendones</strong>,{" "}
+            <strong>Vidrio Bioactivo y Parche Duramadre</strong>.
           </p>
           <p>
-            Los Aloinjertos suministrados por QNA Medical cuentan con procesos de esterilización de última generación y un contenido de hasta 100% de material biológico. Entre estas técnicas se destaca el método PASCO2.
+            Los Biológicos suministrados por QNA Medical cuentan con procesos de esterilización de última generación y un contenido de hasta 100% de material biológico. Entre estos procesos se destacan el <strong>eBeam®</strong> y <strong>PASCO2®</strong>, utilizando electrones de alta potencia o dióxido de carbono supercrítico para eliminar de manera efectiva los microorganismos patógenos presentes en el material, garantizando la eliminación de cualquier tipo de contaminación microbiana. Este proceso asegura un alto potencial biológico, así como mayor seguridad para los pacientes y el personal médico.
           </p>
-          <p>Quedamos atentos a cualquier información adicional que requieran.</p>
+          <p>
+            Nuestra misión es comercializar y distribuir productos de la más alta calidad, incluidos sistemas de{" "}
+            <strong>Trauma, Fijación Externa, Reemplazos Articulares y Medicina Deportiva</strong>, orientados al tratamiento de afecciones degenerativas, traumáticas y deformidades, con aplicaciones en las áreas ortopédica, neurológica, odontológica y maxilofacial.
+          </p>
+          <p>
+            Quedamos atentos a cualquier información adicional que requieran y a la posibilidad de establecer una relación comercial sólida y duradera.
+          </p>
         </div>
 
         <div className="mt-6 border-t border-border pt-4">
