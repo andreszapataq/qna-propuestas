@@ -64,7 +64,7 @@ export function ProposalForm({ data, onChange, ccEmails, onCcChange, onNext }: P
           <input
             className={inputBase}
             type="text"
-            placeholder="Nombre completo"
+            placeholder="Ej. Sr. Juan Carlos Fernández / Dra. Ana Gómez"
             value={data.contactName}
             onChange={(e) => onChange({ contactName: e.target.value })}
           />

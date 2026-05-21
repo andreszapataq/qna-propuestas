@@ -53,7 +53,7 @@ export function ProposalPreview({ data, onBack, onRestart }: Props) {
             {data.institution ? formatInstitution(data.institution) : "[Institución]"}
           </strong>
           <br />
-          Sr. {data.contactName || "[Nombre]"}
+          {data.contactName || "[Nombre]"}
           <br />
           {data.contactRole || "[Cargo]"}
           <br />

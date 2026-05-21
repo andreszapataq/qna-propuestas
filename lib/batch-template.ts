@@ -2,7 +2,7 @@ import type { PaymentTermsKey, ProposalData } from "./types";
 
 const HEADERS = [
   "Institución",
-  "Contacto",
+  "Contacto (con tratamiento, ej. Sr./Dra.)",
   "Cargo",
   "Ciudad - Departamento",
   "Tipo (ips/distribuidor)",
@@ -11,11 +11,11 @@ const HEADERS = [
 ] as const;
 
 const EXAMPLES: Array<string | number>[] = [
-  ["Clínica La Estancia", "Luis Guillermo Gutierrez", "Jefe de Compras", "Popayan - Cauca", "ips", 10, "contado"],
-  ["Medical Neuro", "Jenny Rosero", "Gerente", "Ipiales - Nariño", "distribuidor", 15, "contado"],
+  ["Clínica La Estancia", "Sr. Luis Guillermo Gutierrez", "Jefe de Compras", "Popayan - Cauca", "ips", 10, "contado"],
+  ["Medical Neuro", "Sra. Jenny Rosero", "Gerente", "Ipiales - Nariño", "distribuidor", 15, "contado"],
   [
     "Hospital Universitario San José de Popayan",
-    "Juan Francisco Mora",
+    "Dr. Juan Francisco Mora",
     "Jefe de Compras",
     "Popayan - Cauca",
     "ips",
@@ -29,7 +29,7 @@ export async function downloadXlsxTemplate(): Promise<void> {
   const ws = XLSX.utils.aoa_to_sheet([HEADERS as unknown as string[], ...EXAMPLES]);
   ws["!cols"] = [
     { wch: 38 },
-    { wch: 26 },
+    { wch: 32 },
     { wch: 20 },
     { wch: 22 },
     { wch: 22 },

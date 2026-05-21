@@ -259,7 +259,7 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   doc.text(formatInstitution(data.institution), mL, y);
   y += 6;
   doc.setFont("helvetica", "normal");
-  doc.text(`Sr. ${data.contactName || ""}`, mL, y);
+  doc.text(data.contactName || "", mL, y);
   y += 5;
   doc.text(data.contactRole || "", mL, y);
   y += 5;
