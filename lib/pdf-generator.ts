@@ -414,7 +414,7 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
 }
 
 export function proposalFileName(data: ProposalData): string {
-  return `Propuesta_QNA_${cleanFileName(data.institution)}_${cleanFileName(data.contactName)}.pdf`;
+  return `Propuesta QNA - ${cleanFileName(data.institution)} - ${cleanFileName(data.contactName)}.pdf`;
 }
 
 export async function generateSinglePDF(data: ProposalData): Promise<string> {

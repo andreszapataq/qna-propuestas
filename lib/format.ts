@@ -43,8 +43,9 @@ export const formatInstitution = (s: string): string => (s || "").toUpperCase();
 
 export const cleanFileName = (s: string): string =>
   (s || "")
-    .replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]/g, "")
-    .replace(/\s+/g, "_");
+    .replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s.]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 
 export const discountedPrice = (price: number, discount: number): number =>
   Math.round(price * (1 - discount / 100));
