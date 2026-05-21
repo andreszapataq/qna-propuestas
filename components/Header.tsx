@@ -16,7 +16,7 @@ export function Header() {
         <div>
           <h1 className="text-[20px] font-medium text-white">Generador de propuestas</h1>
           <p className="mt-0.5 text-[13px] text-white/70">
-            Propuestas económicas — Aloinjertos Gold Standard
+            Propuestas económicas — Biológicos Gold Standard
           </p>
         </div>
       </div>

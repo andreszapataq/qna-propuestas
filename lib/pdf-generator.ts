@@ -2,7 +2,7 @@ import { jsPDF } from "jspdf";
 import autoTable, { type CellHookData } from "jspdf-autotable";
 import type { ProposalData } from "./types";
 import { getProducts } from "./prices";
-import { cleanFileName, discountedPrice, ptLabel, todayStr } from "./format";
+import { cleanFileName, discountedPrice, priceTableNote, todayStr } from "./format";
 
 let cachedLogoPng: string | null = null;
 let cachedSignaturePng: string | null = null;
@@ -210,7 +210,6 @@ function renderJustifiedParagraph(
 
 export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   const products = getProducts(data.type);
-  const paymentTerms = ptLabel(data.paymentTermsKey);
   const doc = new jsPDF({ unit: "mm", format: "letter" });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
@@ -263,7 +262,7 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
 
   doc.setFont("helvetica", "bold");
   doc.setTextColor(0, 85, 128);
-  doc.text("Ref. Propuesta Económica de Aloinjertos Gold Standard", mL, y);
+  doc.text("Ref. Propuesta Económica de Biológicos Gold Standard", mL, y);
   y += 10;
 
   doc.setFont("helvetica", "normal");
@@ -306,9 +305,9 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   doc.setTextColor(50);
   doc.setFont("helvetica", "normal");
   const introSegments: Segment[] = [
-    { text: "Tabla de precios de Aloinjertos para ", bold: false },
+    { text: "Tabla de precios de Biológicos para ", bold: false },
     { text: data.institution || "", bold: true },
-    { text: `, por ${paymentTerms}.`, bold: false },
+    { text: `, ${priceTableNote(data.paymentTermsKey)}`, bold: false },
   ];
   y = renderJustifiedParagraph(doc, introSegments, mL, y, cW, 5);
   y += 4;

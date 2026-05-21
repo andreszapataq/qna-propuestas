@@ -17,7 +17,7 @@ const INITIAL_DATA: ProposalData = {
   contactEmail: "",
   city: "",
   discount: 10,
-  paymentTermsKey: "30",
+  paymentTermsKey: "contado",
   ccEmails: [""],
 };
 

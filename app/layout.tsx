@@ -16,7 +16,7 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "QNA Medical — Generador de Propuestas",
-  description: "Generador de propuestas económicas — Aloinjertos Gold Standard",
+  description: "Generador de propuestas económicas — Biológicos Gold Standard",
 };
 
 export default function RootLayout({

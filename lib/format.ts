@@ -32,6 +32,12 @@ const PAYMENT_LABELS: Record<PaymentTermsKey, string> = {
 export const ptLabel = (k: PaymentTermsKey): string =>
   PAYMENT_LABELS[k] ?? PAYMENT_LABELS["30"];
 
+// Texto que sigue al nombre de la institución en la tabla de precios (pág. 2).
+export const priceTableNote = (k: PaymentTermsKey): string =>
+  k === "contado"
+    ? "primera compra de contado. Plazos de 30 y 60 días sujetos a estudio crediticio."
+    : `por ${ptLabel(k)}.`;
+
 export const cleanFileName = (s: string): string =>
   (s || "")
     .replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]/g, "")

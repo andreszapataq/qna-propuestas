@@ -4,7 +4,7 @@ import { Fragment, useState } from "react";
 import Image from "next/image";
 import type { ProposalData } from "@/lib/types";
 import { getProducts } from "@/lib/prices";
-import { discountedPrice, ptLabel, todayStr } from "@/lib/format";
+import { discountedPrice, priceTableNote, todayStr } from "@/lib/format";
 
 type Props = {
   data: ProposalData;
@@ -21,7 +21,6 @@ type Status =
 export function ProposalPreview({ data, onBack, onRestart }: Props) {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const products = getProducts(data.type);
-  const paymentTerms = ptLabel(data.paymentTermsKey);
 
   const handleDownload = async () => {
     setStatus({ kind: "loading" });
@@ -60,7 +59,7 @@ export function ProposalPreview({ data, onBack, onRestart }: Props) {
         </p>
 
         <p className="my-4 text-[13px] font-semibold text-primary-dark">
-          Ref. Propuesta Económica de Aloinjertos Gold Standard
+          Ref. Propuesta Económica de Biológicos Gold Standard
         </p>
 
         <div className="text-text-sec space-y-2 text-[12.5px]">
@@ -93,8 +92,9 @@ export function ProposalPreview({ data, onBack, onRestart }: Props) {
         <hr className="my-6 border-0 border-t-2 border-primary" />
 
         <p className="mb-2 text-[12px] text-primary-dark">
-          Tabla de precios de Aloinjertos para{" "}
-          <strong>{data.institution || "[Institución]"}</strong>, por {paymentTerms}.
+          Tabla de precios de Biológicos para{" "}
+          <strong>{data.institution || "[Institución]"}</strong>,{" "}
+          {priceTableNote(data.paymentTermsKey)}
         </p>
 
         <table className="my-4 w-full border-collapse text-[12px]">
