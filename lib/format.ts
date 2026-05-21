@@ -38,6 +38,9 @@ export const priceTableNote = (k: PaymentTermsKey): string =>
     ? "primera compra de contado. Plazos de 30 y 60 días sujetos a estudio crediticio."
     : `por ${ptLabel(k)}.`;
 
+// Nombre de la institución, normalizado para mostrar en la propuesta.
+export const formatInstitution = (s: string): string => (s || "").toUpperCase();
+
 export const cleanFileName = (s: string): string =>
   (s || "")
     .replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]/g, "")

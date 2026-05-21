@@ -2,7 +2,13 @@ import { jsPDF } from "jspdf";
 import autoTable, { type CellHookData } from "jspdf-autotable";
 import type { ProposalData } from "./types";
 import { getProducts } from "./prices";
-import { cleanFileName, discountedPrice, priceTableNote, todayStr } from "./format";
+import {
+  cleanFileName,
+  discountedPrice,
+  formatInstitution,
+  priceTableNote,
+  todayStr,
+} from "./format";
 
 let cachedLogoPng: string | null = null;
 let cachedSignaturePng: string | null = null;
@@ -250,7 +256,7 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   doc.setFont("helvetica", "bold");
   doc.text("Señores", mL, y);
   y += 6;
-  doc.text((data.institution || "").toUpperCase(), mL, y);
+  doc.text(formatInstitution(data.institution), mL, y);
   y += 6;
   doc.setFont("helvetica", "normal");
   doc.text(`Sr. ${data.contactName || ""}`, mL, y);
@@ -306,7 +312,7 @@ export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   doc.setFont("helvetica", "normal");
   const introSegments: Segment[] = [
     { text: "Tabla de precios de Biológicos para ", bold: false },
-    { text: data.institution || "", bold: true },
+    { text: formatInstitution(data.institution), bold: true },
     { text: `, ${priceTableNote(data.paymentTermsKey)}`, bold: false },
   ];
   y = renderJustifiedParagraph(doc, introSegments, mL, y, cW, 5);

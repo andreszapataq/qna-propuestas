@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { formatInstitution } from "@/lib/format";
 import type { ProposalData } from "@/lib/types";
 
 type Status =
@@ -186,7 +187,7 @@ export function BatchMode() {
                   <tr key={i} className={i % 2 === 1 ? "bg-[#f9fafb]" : ""}>
                     <td className="border-b border-border px-2.5 py-1.5">{i + 1}</td>
                     <td className="border-b border-border px-2.5 py-1.5">
-                      <strong>{d.institution}</strong>
+                      <strong>{formatInstitution(d.institution)}</strong>
                     </td>
                     <td className="border-b border-border px-2.5 py-1.5">{d.contactName}</td>
                     <td className="border-b border-border px-2.5 py-1.5">{d.contactRole}</td>

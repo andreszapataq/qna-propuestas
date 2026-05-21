@@ -4,7 +4,7 @@ import { Fragment, useState } from "react";
 import Image from "next/image";
 import type { ProposalData } from "@/lib/types";
 import { getProducts } from "@/lib/prices";
-import { discountedPrice, priceTableNote, todayStr } from "@/lib/format";
+import { discountedPrice, formatInstitution, priceTableNote, todayStr } from "@/lib/format";
 
 type Props = {
   data: ProposalData;
@@ -49,7 +49,9 @@ export function ProposalPreview({ data, onBack, onRestart }: Props) {
         <p>
           <strong>Señores</strong>
           <br />
-          <strong>{data.institution || "[Institución]"}</strong>
+          <strong>
+            {data.institution ? formatInstitution(data.institution) : "[Institución]"}
+          </strong>
           <br />
           Sr. {data.contactName || "[Nombre]"}
           <br />
@@ -93,7 +95,10 @@ export function ProposalPreview({ data, onBack, onRestart }: Props) {
 
         <p className="mb-2 text-[12px] text-primary-dark">
           Tabla de precios de Biológicos para{" "}
-          <strong>{data.institution || "[Institución]"}</strong>,{" "}
+          <strong>
+            {data.institution ? formatInstitution(data.institution) : "[Institución]"}
+          </strong>
+          ,{" "}
           {priceTableNote(data.paymentTermsKey)}
         </p>
 
