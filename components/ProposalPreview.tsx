@@ -66,7 +66,7 @@ export function ProposalPreview({ data, onBack, onRestart }: Props) {
         <div className="text-text-sec space-y-2 text-[12.5px]">
           <p>Cordial saludo,</p>
           <p>
-            Agradecemos la oportunidad que nos brinda. Reconociendo la amplia trayectoria y experiencia de su prestigiosa institución, ponemos a su consideración nuestra propuesta técnica y económica de Biológicos Gold Standard, reconocidos por su alto desempeño en el mercado global, contamos con{" "}
+            Agradecemos la oportunidad que nos brinda. Reconociendo la amplia trayectoria y experiencia de su prestigiosa institución, ponemos a su consideración nuestra propuesta técnica y económica de Biológicos Gold Standard, reconocidos por su alto desempeño en el mercado global, contamos con presentaciones como{" "}
             <strong>Putty</strong>, <strong>Chips</strong>, <strong>Bloque Tricortical</strong>,{" "}
             <strong>Cabeza Femoral</strong>, <strong>Lajas</strong>, <strong>Tendones</strong>,{" "}
             <strong>Vidrio Bioactivo y Parche Duramadre</strong>.

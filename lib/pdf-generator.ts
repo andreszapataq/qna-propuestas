@@ -62,7 +62,7 @@ const BODY_PARAGRAPHS: Segment[][] = [
   [],
   [
     {
-      text: "Agradecemos la oportunidad que nos brinda. Reconociendo la amplia trayectoria y experiencia de su prestigiosa institución, ponemos a su consideración nuestra propuesta técnica y económica de Biológicos Gold Standard, reconocidos por su alto desempeño en el mercado global, contamos con ",
+      text: "Agradecemos la oportunidad que nos brinda. Reconociendo la amplia trayectoria y experiencia de su prestigiosa institución, ponemos a su consideración nuestra propuesta técnica y económica de Biológicos Gold Standard, reconocidos por su alto desempeño en el mercado global, contamos con presentaciones como ",
       bold: false,
     },
     { text: "Putty", bold: true },
