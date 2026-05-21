@@ -210,7 +210,7 @@ function renderJustifiedParagraph(
 
 export async function buildPDF(data: ProposalData): Promise<jsPDF> {
   const products = getProducts(data.type);
-  const doc = new jsPDF({ unit: "mm", format: "letter" });
+  const doc = new jsPDF({ unit: "mm", format: "letter", compress: true });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
   const mL = 25;
